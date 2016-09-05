@@ -1,0 +1,24 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TeamspeakQueryDatabase</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/pure-min.css" integrity="sha256-AOg6pfZnxO4hlBH2z2ummgdGKU8XU9ugUPkyWaSMJ0c=" crossorigin="anonymous">
+</head>
+<body>
+  <table class="pure-table">
+    <thead><tr>
+      <td>command</td><td>arguments</td><td>description</td>
+    </tr></thead>
+    <tbody>
+      {% for command, information in commands %}
+      <tr>
+        <td id="{{ command }}"><a href="#{{ command }}">{{ command }}</a></td>
+        <td>{{ information.arguments }}</td>
+        <td>{{ information.description }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
