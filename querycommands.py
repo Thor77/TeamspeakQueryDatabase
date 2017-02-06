@@ -6,15 +6,33 @@ from jinja2 import Environment, FileSystemLoader
 
 
 def parse_doc(doc):
-    lines = doc.split('\n')
-    # blank between usage and description
-    first_blank = lines.index('')
-    # blank between desc and ex
-    next_blank = (first_blank + 1) + lines[first_blank + 1:].index('')
-    description = ''.join(lines[first_blank + 1:next_blank])
-    args = ' '.join(''.join([args.strip() for args in lines[:first_blank]])
-                    .split()[2:])
-    return lines[0].split()[1], description, args
+    sections = {}
+    current_section = None
+    for line in doc.split('\n'):
+        if line.startswith('Usage:') or line.startswith('Description:') or \
+                line.startswith('Example:') or line.startswith('Permission:'):
+            # section start
+            line_parts = line.split(':')
+            section = line_parts[0]
+            initial_data = []
+            if len(line_parts) > 1:
+                line_data = ''.join(line_parts[1:])
+                if line_data:
+                    initial_data = [line_data.strip()]
+            sections.setdefault(section, initial_data)
+            current_section = section
+        else:
+            if not current_section:
+                # discard data because there's no section for it
+                continue
+            # data
+            line = line.strip()
+            if line:
+                sections[current_section].append(line)
+    usage_data = sections['Usage'][0].split(maxsplit=1)
+    command = usage_data[0]
+    args = usage_data[1] if len(usage_data) > 1 else None
+    return command, ' '.join(sections.get('Description', [])), args
 
 
 def parse(query_docs):
