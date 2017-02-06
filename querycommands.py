@@ -70,8 +70,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Visualize Teamspeak Query-docs')
     parser.add_argument(
-        '-qc', '--querycommands',
-        help='(globbing) path to query commands',
+        '-p', '--path',
+        help='(globbing) path to serverquerydocs/',
         required=True
     )
     parser.add_argument(
@@ -81,4 +81,4 @@ if __name__ == '__main__':
         '-t', '--template', help='Template', default='query.jinja2'
     )
     args = parser.parse_args()
-    main(args.querycommands, args.output, args.template)
+    main(args.path, args.output, args.template)
