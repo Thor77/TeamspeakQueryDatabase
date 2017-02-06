@@ -43,6 +43,7 @@ def main(query_docs, output, template='query.jinja2'):
     commands = parse(query_docs)
     render(commands, output, template)
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Visualize Teamspeak Query-docs')
