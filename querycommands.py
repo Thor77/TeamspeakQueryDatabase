@@ -29,6 +29,9 @@ def parse_doc(doc):
             line = line.strip()
             if line:
                 sections[current_section].append(line)
+
+    if 'Usage' not in sections:
+        return None, None, None
     usage_data = sections['Usage'][0].split(maxsplit=1)
     command = usage_data[0]
     args = usage_data[1] if len(usage_data) > 1 else None
@@ -40,10 +43,11 @@ def parse(query_docs):
     for query_file in glob(query_docs):
         with open(query_file, 'r') as f:
             command, description, args = parse_doc(f.read())
-            commands[command] = {
-                'description': description,
-                'arguments': args
-            }
+            if command is not None and args is not None:
+                commands[command] = {
+                    'description': description or '',
+                    'arguments': args
+                }
     return commands
 
 
