@@ -8,7 +8,7 @@
 <body>
   <table class="pure-table">
     <thead><tr>
-      <td>command</td><td>arguments</td><td>description</td>
+      <td>command</td><td>arguments</td><td>description</td><td>permissions</td>
     </tr></thead>
     <tbody>
       {% for command, information in commands %}
@@ -16,6 +16,7 @@
         <td id="{{ command }}"><a href="#{{ command }}">{{ command }}</a></td>
         <td>{{ information.arguments }}</td>
         <td>{{ information.description }}</td>
+        <td>{{ information.permissions }}</td>
       </tr>
       {% endfor %}
     </tbody>

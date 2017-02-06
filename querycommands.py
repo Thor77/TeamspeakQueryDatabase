@@ -31,22 +31,24 @@ def parse_doc(doc):
                 sections[current_section].append(line)
 
     if 'Usage' not in sections:
-        return None, None, None
+        return None, None, None, None
     usage_data = sections['Usage'][0].split(maxsplit=1)
     command = usage_data[0]
     args = usage_data[1] if len(usage_data) > 1 else None
-    return command, ' '.join(sections.get('Description', [])), args
+    return command, ' '.join(sections.get('Description', [])), args, \
+        ', '.join(sections.get('Permissions', []))
 
 
 def parse(query_docs):
     commands = {}
     for query_file in glob(query_docs):
         with open(query_file, 'r') as f:
-            command, description, args = parse_doc(f.read())
+            command, description, args, permissions = parse_doc(f.read())
             if command is not None and args is not None:
                 commands[command] = {
                     'description': description or '',
-                    'arguments': args
+                    'arguments': args,
+                    'permissions': permissions
                 }
     return commands
 
