@@ -1,0 +1,753 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TeamspeakQueryDatabase</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/pure-min.css" integrity="sha256-AOg6pfZnxO4hlBH2z2ummgdGKU8XU9ugUPkyWaSMJ0c=" crossorigin="anonymous">
+</head>
+<body>
+  <table class="pure-table">
+    <thead><tr>
+      <td>command</td><td>arguments</td><td>description</td><td>permissions</td>
+    </tr></thead>
+    <tbody>
+      
+      <tr>
+        <td id="banadd"><a href="#banadd">banadd</a></td>
+        <td>[ip={regexp}] [name={regexp}] [uid={clientUID}]</td>
+        <td>Adds a new ban rule on the selected virtual server. All parameters are optional but at least one of the following must be set: ip, name, or uid.</td>
+        <td>b_client_ban_create</td>
+      </tr>
+      
+      <tr>
+        <td id="banclient"><a href="#banclient">banclient</a></td>
+        <td>clid={clientID} [time={timeInSeconds}] [banreason={text}]</td>
+        <td>Bans the client specified with ID clid from the server. Please note that this will create two separate ban rules for the targeted clients IP address and his unique identifier.</td>
+        <td>i_client_ban_power, i_client_needed_ban_power</td>
+      </tr>
+      
+      <tr>
+        <td id="bandel"><a href="#bandel">bandel</a></td>
+        <td>banid={banID}</td>
+        <td>Deletes the ban rule with ID banid from the server.</td>
+        <td>b_client_ban_delete, b_client_ban_delete_own</td>
+      </tr>
+      
+      <tr>
+        <td id="bindinglist"><a href="#bindinglist">bindinglist</a></td>
+        <td>[subsystem={voice|query|filetransfer}]</td>
+        <td>Displays a list of IP addresses used by the server instance on multi-homed machines. If no subsystem is specified, "voice" is used by default.</td>
+        <td>b_serverinstance_binding_list</td>
+      </tr>
+      
+      <tr>
+        <td id="channeladdperm"><a href="#channeladdperm">channeladdperm</a></td>
+        <td>cid={channelID} [permid={permID}...]</td>
+        <td>Adds a set of specified permissions to a channel. Multiple permissions can be added by providing the two parameters of each permission. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelclientaddperm"><a href="#channelclientaddperm">channelclientaddperm</a></td>
+        <td>cid={channelID} cldbid={clientDBID}</td>
+        <td>Adds a set of specified permissions to a client in a specific channel. Multiple permissions can be added by providing the three parameters of each permission. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelclientdelperm"><a href="#channelclientdelperm">channelclientdelperm</a></td>
+        <td>cid={channelID} cldbid={clientDBID}</td>
+        <td>Removes a set of specified permissions from a client in a specific channel. Multiple permissions can be removed at once. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelclientpermlist"><a href="#channelclientpermlist">channelclientpermlist</a></td>
+        <td>cid={channelID} cldbid={clientDBID} [-permsid]</td>
+        <td>Displays a list of permissions defined for a client in a specific channel.</td>
+        <td>b_virtualserver_channelclient_permission_list</td>
+      </tr>
+      
+      <tr>
+        <td id="channelcreate"><a href="#channelcreate">channelcreate</a></td>
+        <td>channel_name={channelName} [channel_properties...]</td>
+        <td>Creates a new channel using the given properties and displays its ID. Note that this command accepts multiple properties which means that you're able to specifiy all settings of the new channel at once. For detailed information, see Channel Properties.</td>
+        <td>i_channel_min_depth, i_channel_max_depth, b_channel_create_child, b_channel_create_permanent, b_channel_create_semi_permanent, b_channel_create_temporary, b_channel_create_with_topic, b_channel_create_with_description, b_channel_create_with_password, b_channel_create_modify_with_codec_speex8, b_channel_create_modify_with_codec_speex16, b_channel_create_modify_with_codec_speex32, b_channel_create_modify_with_codec_celtmono48, i_channel_create_modify_with_codec_maxquality, i_channel_create_modify_with_codec_latency_factor_min, b_channel_create_with_maxclients, b_channel_create_with_maxfamilyclients, b_channel_create_with_sortorder, b_channel_create_with_default, b_channel_create_with_needed_talk_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channeldelete"><a href="#channeldelete">channeldelete</a></td>
+        <td>cid={channelID} force={1|0}</td>
+        <td>Deletes an existing channel by ID. If force is set to 1, the channel will be deleted even if there are clients within. The clients will be kicked to the default channel with an appropriate reason message.</td>
+        <td>b_channel_delete_permanent, b_channel_delete_semi_permanent, b_channel_delete_temporary, b_channel_delete_flag_force</td>
+      </tr>
+      
+      <tr>
+        <td id="channeldelperm"><a href="#channeldelperm">channeldelperm</a></td>
+        <td>cid=123 [permid={permID}...] [permsid={permName}...]</td>
+        <td>Removes a set of specified permissions from a channel. Multiple permissions can be removed at once. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channeledit"><a href="#channeledit">channeledit</a></td>
+        <td>cid={channelID} [channel_properties...]</td>
+        <td>Changes a channels configuration using given properties. Note that this command accepts multiple properties which means that you're able to change all settings of the channel specified with cid at once. For detailed information, see Channel Properties.</td>
+        <td>i_channel_min_depth, i_channel_max_depth, b_channel_modify_parent, b_channel_modify_make_default, b_channel_modify_make_permanent, b_channel_modify_make_semi_permanent, b_channel_modify_make_temporary, b_channel_modify_name, b_channel_modify_topic, b_channel_modify_description, b_channel_modify_password, b_channel_modify_codec, b_channel_create_modify_with_codec_speex8, b_channel_create_modify_with_codec_speex16, b_channel_create_modify_with_codec_speex32, b_channel_create_modify_with_codec_celtmono48, b_channel_modify_codec_quality, b_channel_create_modify_with_codec_maxquality, b_channel_modify_codec_latency_factor, b_channel_modify_make_codec_encrypted, b_channel_modify_maxclients, b_channel_modify_maxfamilyclients, b_channel_modify_sortorder, b_channel_modify_needed_talk_power, i_channel_modify_power, i_channel_needed_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelfind"><a href="#channelfind">channelfind</a></td>
+        <td>pattern={channelName}</td>
+        <td>Displays a list of channels matching a given name pattern.</td>
+        <td>b_virtualserver_channel_search</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgroupadd"><a href="#channelgroupadd">channelgroupadd</a></td>
+        <td>name={groupName} [type={groupDbType}]</td>
+        <td>Creates a new channel group using a given name and displays its ID. The optional type parameter can be used to create template groups. For detailed information, see Definitions.</td>
+        <td>b_virtualserver_channelgroup_create</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgroupaddperm"><a href="#channelgroupaddperm">channelgroupaddperm</a></td>
+        <td>cgid={groupID} [permid={permID}...]</td>
+        <td>Adds a set of specified permissions to a channel group. Multiple permissions can be added by providing the two parameters of each permission. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgroupclientlist"><a href="#channelgroupclientlist">channelgroupclientlist</a></td>
+        <td>[cid={channelID}] [cldbid={clientDBID}]</td>
+        <td>Displays all the client and/or channel IDs currently assigned to channel groups. All three parameters are optional so you're free to choose the most suitable combination for your requirements.</td>
+        <td>b_virtualserver_channelgroup_client_list</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgroupcopy"><a href="#channelgroupcopy">channelgroupcopy</a></td>
+        <td>scgid={sourceGroupID} tsgid={targetGroupID}</td>
+        <td>Creates a copy of the channel group specified with scgid. If tcgid is set to 0, the server will create a new group. To overwrite an existing group, simply set tcgid to the ID of a designated target group. If a target group is set, the name parameter will be ignored. The type parameter can be used to create template groups. For detailed information, see Definitions.</td>
+        <td>b_virtualserver_channelgroup_create, i_group_modify_power, i_group_needed_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgroupdel"><a href="#channelgroupdel">channelgroupdel</a></td>
+        <td>cgid={groupID} force={1|0}</td>
+        <td>Deletes a channel group by ID. If force is set to 1, the channel group will be deleted even if there are clients within.</td>
+        <td>b_virtualserver_channelgroup_delete</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgroupdelperm"><a href="#channelgroupdelperm">channelgroupdelperm</a></td>
+        <td>cgid={groupID} [permid={permID}...]</td>
+        <td>Removes a set of specified permissions from the channel group. Multiple permissions can be removed at once. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgrouppermlist"><a href="#channelgrouppermlist">channelgrouppermlist</a></td>
+        <td>cgid={groupID} [-permsid]</td>
+        <td>Displays a list of permissions assigned to the channel group specified with cgid. If the -permsid option is specified, the output will contain the permission names instead of the internal IDs.</td>
+        <td>b_virtualserver_channelgroup_permission_list</td>
+      </tr>
+      
+      <tr>
+        <td id="channelgrouprename"><a href="#channelgrouprename">channelgrouprename</a></td>
+        <td>cgid={groupID} name={groupName}</td>
+        <td>Changes the name of a specified channel group.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="channelinfo"><a href="#channelinfo">channelinfo</a></td>
+        <td>cid={channelID}</td>
+        <td>Displays detailed configuration information about a channel including ID, topic, description, etc. For detailed information, see Channel Properties.</td>
+        <td>b_channel_info_view</td>
+      </tr>
+      
+      <tr>
+        <td id="channellist"><a href="#channellist">channellist</a></td>
+        <td>[-topic] [-flags] [-voice] [-limits] [-icon] [-secondsempty]</td>
+        <td>Displays a list of channels created on a virtual server including their ID, order, name, etc. The output can be modified using several command options.</td>
+        <td>b_virtualserver_channel_list</td>
+      </tr>
+      
+      <tr>
+        <td id="channelmove"><a href="#channelmove">channelmove</a></td>
+        <td>cid={channelID} cpid={channelParentID}</td>
+        <td>Moves a channel to a new parent channel with the ID cpid. If order is specified, the channel will be sorted right under the channel with the specified ID. If order is set to 0, the channel will be sorted right below the new parent.</td>
+        <td>i_channel_min_depth, i_channel_max_depth, b_channel_modify_parent, b_channel_modify_sortorder</td>
+      </tr>
+      
+      <tr>
+        <td id="channelpermlist"><a href="#channelpermlist">channelpermlist</a></td>
+        <td>cid={channelID} [-permsid]</td>
+        <td>Displays a list of permissions defined for a channel.</td>
+        <td>b_virtualserver_channel_permission_list</td>
+      </tr>
+      
+      <tr>
+        <td id="clientaddperm"><a href="#clientaddperm">clientaddperm</a></td>
+        <td>cldbid={clientDBID} [permid={permID}...]</td>
+        <td>Adds a set of specified permissions to a client. Multiple permissions can be added by providing the three parameters of each permission. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientdbdelete"><a href="#clientdbdelete">clientdbdelete</a></td>
+        <td>cldbid={clientDBID}</td>
+        <td>Deletes a clients properties from the database.</td>
+        <td>b_client_delete_dbproperties</td>
+      </tr>
+      
+      <tr>
+        <td id="clientdbedit"><a href="#clientdbedit">clientdbedit</a></td>
+        <td>cldbid={clientDBID} [client_properties...]</td>
+        <td>Changes a clients settings using given properties. For detailed information, see Client Properties.</td>
+        <td>b_client_modify_dbproperties, b_client_modify_description, b_client_set_talk_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientdbfind"><a href="#clientdbfind">clientdbfind</a></td>
+        <td>pattern={clientName|clientUID} [-uid]</td>
+        <td>Displays a list of client database IDs matching a given pattern. You can either search for a clients last known nickname or his unique identity by using the -uid option. The pattern parameter can include regular characters and SQL wildcard characters (e.g. %).</td>
+        <td>b_virtualserver_client_dbsearch</td>
+      </tr>
+      
+      <tr>
+        <td id="clientdbinfo"><a href="#clientdbinfo">clientdbinfo</a></td>
+        <td>cldbid={clientDBID}</td>
+        <td>Displays detailed database information about a client including unique ID, creation date, etc.</td>
+        <td>b_virtualserver_client_dbinfo</td>
+      </tr>
+      
+      <tr>
+        <td id="clientdblist"><a href="#clientdblist">clientdblist</a></td>
+        <td>[start={offset}] [duration={limit}] [-count]</td>
+        <td>Displays a list of client identities known by the server including their database ID, last nickname, etc.</td>
+        <td>b_virtualserver_client_dblist</td>
+      </tr>
+      
+      <tr>
+        <td id="clientedit"><a href="#clientedit">clientedit</a></td>
+        <td>clid={clientID} [client_properties...]</td>
+        <td>Changes a clients settings using given properties. For detailed information, see Client Properties.</td>
+        <td>b_client_modify_description, b_client_set_talk_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientfind"><a href="#clientfind">clientfind</a></td>
+        <td>pattern={clientName}</td>
+        <td>Displays a list of clients matching a given name pattern.</td>
+        <td>b_virtualserver_client_search</td>
+      </tr>
+      
+      <tr>
+        <td id="clientgetdbidfromuid"><a href="#clientgetdbidfromuid">clientgetdbidfromuid</a></td>
+        <td>cluid={clientUID}</td>
+        <td>Displays the database ID matching the unique identifier specified by cluid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="clientgetids"><a href="#clientgetids">clientgetids</a></td>
+        <td>cluid={clientUID}</td>
+        <td>Displays all client IDs matching the unique identifier specified by cluid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="clientgetnamefromdbid"><a href="#clientgetnamefromdbid">clientgetnamefromdbid</a></td>
+        <td>cldbid={clientDBID}</td>
+        <td>Displays the unique identifier and nickname matching the database ID specified by cldbid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="clientgetnamefromuid"><a href="#clientgetnamefromuid">clientgetnamefromuid</a></td>
+        <td>cluid={clientUID}</td>
+        <td>Displays the database ID and nickname matching the unique identifier specified by cluid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="clientgetuidfromclid"><a href="#clientgetuidfromclid">clientgetuidfromclid</a></td>
+        <td>clid={clientID}</td>
+        <td>Displays the unique identifier matching the clientID specified by clid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="clientinfo"><a href="#clientinfo">clientinfo</a></td>
+        <td>clid={clientID}</td>
+        <td>Displays detailed configuration information about a client including unique ID, nickname, client version, etc.</td>
+        <td>b_client_info_view</td>
+      </tr>
+      
+      <tr>
+        <td id="clientkick"><a href="#clientkick">clientkick</a></td>
+        <td>clid={clientID}... reasonid={4|5} [reasonmsg={text}]</td>
+        <td>Kicks one or more clients specified with clid from their currently joined channel or from the server, depending on reasonid. The reasonmsg parameter specifies a text message sent to the kicked clients. This parameter is optional and may only have a maximum of 40 characters. For detailed information, see Definitions.</td>
+        <td>i_client_kick_from_server_power, i_client_kick_from_channel_power, i_client_needed_kick_from_server_power, i_client_needed_kick_from_channel_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientlist"><a href="#clientlist">clientlist</a></td>
+        <td>[-uid] [-away] [-voice] [-times] [-groups] [-info] [-country]</td>
+        <td>Displays a list of clients online on a virtual server including their ID, nickname, status flags, etc. The output can be modified using several command options. Please note that the output will only contain clients which are currently in channels you're able to subscribe to.</td>
+        <td>b_virtualserver_client_list, i_channel_subscribe_power, i_channel_needed_subscribe_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientmove"><a href="#clientmove">clientmove</a></td>
+        <td>clid={clientID}... cid={channelID} [cpw={channelPassword}]</td>
+        <td>Moves one or more clients specified with clid to the channel with ID cid. If the target channel has a password, it needs to be specified with cpw. If the channel has no password, the parameter can be omitted.</td>
+        <td>i_client_move_power, i_client_needed_move_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientpermlist"><a href="#clientpermlist">clientpermlist</a></td>
+        <td>cldbid={clientDBID} [-permsid]</td>
+        <td>Displays a list of permissions defined for a client.</td>
+        <td>b_virtualserver_client_permission_list</td>
+      </tr>
+      
+      <tr>
+        <td id="clientpoke"><a href="#clientpoke">clientpoke</a></td>
+        <td>clid={clientID} msg={text}</td>
+        <td>Sends a poke message to the client specified with clid.</td>
+        <td>i_client_poke_power, i_client_needed_poke_power</td>
+      </tr>
+      
+      <tr>
+        <td id="clientsetserverquerylogin"><a href="#clientsetserverquerylogin">clientsetserverquerylogin</a></td>
+        <td>client_login_name={username}</td>
+        <td>Updates your own ServerQuery login credentials using a specified username. The password will be auto-generated.</td>
+        <td>b_client_create_modify_serverquery_login</td>
+      </tr>
+      
+      <tr>
+        <td id="clientupdate"><a href="#clientupdate">clientupdate</a></td>
+        <td>[client_properties...]</td>
+        <td>Change your ServerQuery clients settings using given properties. For detailed information, see Client Properties.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="complainadd"><a href="#complainadd">complainadd</a></td>
+        <td>tcldbid={targetClientDBID} message={text}</td>
+        <td>Submits a complaint about a connected client with database ID tcldbid to the server.</td>
+        <td>i_client_complain_power, i_client_needed_complain_power</td>
+      </tr>
+      
+      <tr>
+        <td id="complaindel"><a href="#complaindel">complaindel</a></td>
+        <td>tcldbid={targetClientDBID} fcldbid={fromClientDBID}</td>
+        <td>Deletes the complaint about the client with ID tcldbid submitted by the client with ID fcldbid from the server.</td>
+        <td>b_client_complain_delete, b_client_complain_delete_own</td>
+      </tr>
+      
+      <tr>
+        <td id="complaindelall"><a href="#complaindelall">complaindelall</a></td>
+        <td>tcldbid={targetClientDBID}</td>
+        <td>Deletes all complaints about the client with database ID tcldbid from the server.</td>
+        <td>b_client_complain_delete</td>
+      </tr>
+      
+      <tr>
+        <td id="complainlist"><a href="#complainlist">complainlist</a></td>
+        <td>[tcldbid={targetClientDBID}]</td>
+        <td>Displays a list of complaints on the selected virtual server. If tcldbid is specified, only complaints about the targeted client will be shown.</td>
+        <td>b_client_complain_list</td>
+      </tr>
+      
+      <tr>
+        <td id="custominfo"><a href="#custominfo">custominfo</a></td>
+        <td>cldbid={clientDBID}</td>
+        <td>Displays a list of custom properties for the client specified with cldbid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="customsearch"><a href="#customsearch">customsearch</a></td>
+        <td>ident={ident} pattern={pattern}</td>
+        <td>Searches for custom client properties specified by ident and value. The value parameter can include regular characters and SQL wildcard characters (e.g. %).</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="ftcreatedir"><a href="#ftcreatedir">ftcreatedir</a></td>
+        <td>cid={channelID} cpw={channelPassword} dirname={dirPath}</td>
+        <td>Creates new directory in a channels file repository.</td>
+        <td>i_ft_directory_create_power, i_ft_needed_file_directory_create_power</td>
+      </tr>
+      
+      <tr>
+        <td id="ftdeletefile"><a href="#ftdeletefile">ftdeletefile</a></td>
+        <td>cid={channelID} cpw={channelPassword} name={filePath}...</td>
+        <td>Deletes one or more files stored in a channels file repository.</td>
+        <td>i_ft_file_delete_power, i_ft_needed_file_delete_power</td>
+      </tr>
+      
+      <tr>
+        <td id="ftgetfileinfo"><a href="#ftgetfileinfo">ftgetfileinfo</a></td>
+        <td>cid={channelID} cpw={channelPassword} name={filePath}...</td>
+        <td>Displays detailed information about one or more specified files stored in a channels file repository.</td>
+        <td>i_ft_file_browse_power, i_ft_needed_file_browse_power</td>
+      </tr>
+      
+      <tr>
+        <td id="ftgetfilelist"><a href="#ftgetfilelist">ftgetfilelist</a></td>
+        <td>cid={channelID} cpw={channelPassword} path={filePath}</td>
+        <td>Displays a list of files and directories stored in the specified channels file repository.</td>
+        <td>i_ft_file_browse_power, i_ft_needed_file_browse_power</td>
+      </tr>
+      
+      <tr>
+        <td id="ftinitdownload"><a href="#ftinitdownload">ftinitdownload</a></td>
+        <td>clientftfid={clientFileTransferID} name={filePath}</td>
+        <td>Initializes a file transfer download. clientftfid is an arbitrary ID to identify the file transfer on client-side. On success, the server generates a new ftkey which is required to start downloading the file through TeamSpeak 3's file transfer interface. Since version 3.0.13 there is an optional proto parameter. The client can request a protocol version with it. Currently only 0 and 1 are supported which only differ in the way they handle some timings. The server will reply which protocol version it will support. The server will reply with an ip parameter if it determines the filetransfer subsystem is not reachable by the ip that is currently being used for the query connection.</td>
+        <td>i_ft_file_download_power, i_ft_needed_file_ download _power, i_ft_quota_mb_ download _per_client</td>
+      </tr>
+      
+      <tr>
+        <td id="ftinitupload"><a href="#ftinitupload">ftinitupload</a></td>
+        <td>clientftfid={clientFileTransferID} name={filePath}</td>
+        <td>Initializes a file transfer upload. clientftfid is an arbitrary ID to identify the file transfer on client-side. On success, the server generates a new ftkey which is required to start uploading the file through TeamSpeak 3's file transfer interface. Since version 3.0.13 there is an optional proto parameter. The client can request a protocol version with it. Currently only 0 and 1 are supported which only differ in the way they handle some timings. The server will reply which protocol version it will support. The server will reply with an ip parameter if it determines the filetransfer subsystem is not reachable by the ip that is currently being used for the query connection.</td>
+        <td>i_ft_file_upload_power, i_ft_needed_file_ upload _power, i_ft_quota_mb_upload_per_client</td>
+      </tr>
+      
+      <tr>
+        <td id="ftrenamefile"><a href="#ftrenamefile">ftrenamefile</a></td>
+        <td>cid={channelID} cpw={channelPassword}</td>
+        <td>Renames a file in a channels file repository. If the two parameters tcid and tcpw are specified, the file will be moved into another channels file repository.</td>
+        <td>i_ft_file_rename_power, i_ft_needed_file_rename_power</td>
+      </tr>
+      
+      <tr>
+        <td id="ftstop"><a href="#ftstop">ftstop</a></td>
+        <td>serverftfid={serverFileTransferID} delete={1|0}</td>
+        <td>Stops the running file transfer with server-side ID serverftfid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="gm"><a href="#gm">gm</a></td>
+        <td>msg={text}</td>
+        <td>Sends a text message to all clients on all virtual servers in the TeamSpeak 3 Server instance.</td>
+        <td>b_serverinstance_textmessage_send</td>
+      </tr>
+      
+      <tr>
+        <td id="instanceedit"><a href="#instanceedit">instanceedit</a></td>
+        <td>[instance_properties...]</td>
+        <td>Changes the server instance configuration using given properties. For detailed information, see Server Instance Properties.</td>
+        <td>b_serverinstance_modify_settings</td>
+      </tr>
+      
+      <tr>
+        <td id="logadd"><a href="#logadd">logadd</a></td>
+        <td>loglevel={1-4} logmsg={text}</td>
+        <td>Writes a custom entry into the servers log. Depending on your permissions, you'll be able to add entries into the server instance log and/or your virtual servers log. The loglevel parameter specifies the type of the entry. For detailed information, see Definitions.</td>
+        <td>b_serverinstance_log_add, b_virtualserver_log_add</td>
+      </tr>
+      
+      <tr>
+        <td id="login"><a href="#login">login</a></td>
+        <td>client_login_name={username} client_login_password={password}</td>
+        <td>Authenticates with the TeamSpeak 3 Server instance using given ServerQuery login credentials.</td>
+        <td>b_serverquery_login</td>
+      </tr>
+      
+      <tr>
+        <td id="logview"><a href="#logview">logview</a></td>
+        <td>[lines={1-100}] [reverse={1|0}] [instance={1|0}] [begin_pos={n}]</td>
+        <td>Displays a specified number of entries from the servers log. If instance is set to 1, the server will return lines from the master logfile (ts3server_0.log) instead of the selected virtual server logfile.</td>
+        <td>b_serverinstance_log_view, b_virtualserver_log_view</td>
+      </tr>
+      
+      <tr>
+        <td id="messageadd"><a href="#messageadd">messageadd</a></td>
+        <td>cluid={clientUID} subject={subject} message={text}</td>
+        <td>Sends an offline message to the client specified by cluid.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="messagedel"><a href="#messagedel">messagedel</a></td>
+        <td>msgid={messageID}</td>
+        <td>Deletes an existing offline message with ID msgid from your inbox.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="messageget"><a href="#messageget">messageget</a></td>
+        <td>msgid={messageID}</td>
+        <td>Displays an existing offline message with ID msgid from your inbox. Please note that this does not automatically set the flag_read property of the message.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="messageupdateflag"><a href="#messageupdateflag">messageupdateflag</a></td>
+        <td>msgid={messageID} flag={1|0}</td>
+        <td>Updates the flag_read property of the offline message specified with msgid. If flag is set to 1, the message will be marked as read.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="permfind"><a href="#permfind">permfind</a></td>
+        <td>[permid={permID}...] [permsid={permName}...]</td>
+        <td>Displays detailed information about all assignments of the permission specified with permid. The output is similar to permoverview which includes the type and the ID of the client, channel or group associated with the permission. A permission can be specified by permid or permsid.</td>
+        <td>b_virtualserver_permission_find, b_serverinstance_permission_find</td>
+      </tr>
+      
+      <tr>
+        <td id="permget"><a href="#permget">permget</a></td>
+        <td>permid={permID}|permid={permID}</td>
+        <td>Displays the current value of the permission specified with permid or permsid for your own connection. This can be useful when you need to check your own privileges.</td>
+        <td>b_client_permissionoverview_own</td>
+      </tr>
+      
+      <tr>
+        <td id="permidgetbyname"><a href="#permidgetbyname">permidgetbyname</a></td>
+        <td>permsid={permName}...</td>
+        <td>Displays the database ID of one or more permissions specified by permsid.</td>
+        <td>b_serverinstance_permission_list</td>
+      </tr>
+      
+      <tr>
+        <td id="permoverview"><a href="#permoverview">permoverview</a></td>
+        <td>cid={channelID} cldbid={clientDBID} [permid={permID}...]</td>
+        <td>Displays all permissions assigned to a client for the channel specified with cid. If permid is set to 0, all permissions will be displayed. A permission can be specified by permid or permsid.</td>
+        <td>b_client_permissionoverview_view</td>
+      </tr>
+      
+      <tr>
+        <td id="privilegekeyadd"><a href="#privilegekeyadd">privilegekeyadd</a></td>
+        <td>tokentype={1|0} tokenid1={groupID} tokenid2={channelID}</td>
+        <td>Create a new token. If tokentype is set to 0, the ID specified with tokenid1 will be a server group ID. Otherwise, tokenid1 is used as a channel group ID and you need to provide a valid channel ID using tokenid2. The tokencustomset parameter allows you to specify a set of custom client properties. This feature can be used when generating tokens to combine a website account database with a TeamSpeak user. The syntax of the value needs to be escaped using the ServerQuery escape patterns and has to follow the general syntax of: ident=ident1 value=value1|ident=ident2 value=value2|ident=ident3 value=value3</td>
+        <td>b_virtualserver_token_add, i_group_needed_member_add_power, i_group_member_add_power</td>
+      </tr>
+      
+      <tr>
+        <td id="privilegekeydelete"><a href="#privilegekeydelete">privilegekeydelete</a></td>
+        <td>token={tokenKey}</td>
+        <td>Deletes an existing token matching the token key specified with token.</td>
+        <td>b_virtualserver_token_delete</td>
+      </tr>
+      
+      <tr>
+        <td id="privilegekeyuse"><a href="#privilegekeyuse">privilegekeyuse</a></td>
+        <td>token={tokenKey}</td>
+        <td>Use a token key gain access to a server or channel group. Please note that the server will automatically delete the token after it has been used.</td>
+        <td>b_virtualserver_token_use</td>
+      </tr>
+      
+      <tr>
+        <td id="sendtextmessage"><a href="#sendtextmessage">sendtextmessage</a></td>
+        <td>targetmode={1-3} target={clientID} msg={text}</td>
+        <td>Sends a text message to a specified target. If targetmode is set to 1, a message is sent to the client with the ID specified by target. If targetmode is set to 2 or 3, the target parameter will be ignored and a message is sent to the current channel or server respectively.</td>
+        <td>i_client_private_textmessage_power, i_client_needed_private_textmessage_power, b_client_server_textmessage_send, b_client_channel_textmessage_send</td>
+      </tr>
+      
+      <tr>
+        <td id="servercreate"><a href="#servercreate">servercreate</a></td>
+        <td>virtualserver_name={serverName}</td>
+        <td>Creates a new virtual server using the given properties and displays its ID, port and initial administrator privilege key. If virtualserver_port is not specified, the server will test for the first unused UDP port. The first virtual server will be running on UDP port 9987 by default. Subsequently started virtual servers will be running on increasing UDP port numbers. For detailed information, see Virtual Server Properties.</td>
+        <td>b_virtualserver_create</td>
+      </tr>
+      
+      <tr>
+        <td id="serverdelete"><a href="#serverdelete">serverdelete</a></td>
+        <td>sid={serverID}</td>
+        <td>Deletes the virtual server specified with sid. Please note that only virtual servers in stopped state can be deleted.</td>
+        <td>b_virtualserver_delete</td>
+      </tr>
+      
+      <tr>
+        <td id="serveredit"><a href="#serveredit">serveredit</a></td>
+        <td>[virtualserver_properties...]</td>
+        <td>Changes the selected virtual servers configuration using given properties. Note that this command accepts multiple properties which means that you're able to change all settings of the selected virtual server at once. For detailed information, see Virtual Server Properties.</td>
+        <td>b_virtualserver_modify_name, b_virtualserver_modify_welcomemessage, b_virtualserver_modify_maxclients, b_virtualserver_modify_reserved_slots, b_virtualserver_modify_password, b_virtualserver_modify_default_servergroup, b_virtualserver_modify_default_channelgroup, b_virtualserver_modify_default_channeladmingroup, b_virtualserver_modify_ft_settings, b_virtualserver_modify_ft_quotas, b_virtualserver_modify_channel_forced_silence, b_virtualserver_modify_complain, b_virtualserver_modify_antiflood, b_virtualserver_modify_hostmessage, b_virtualserver_modify_hostbanner, b_virtualserver_modify_hostbutton, b_virtualserver_modify_port, b_virtualserver_modify_autostart, b_virtualserver_modify_needed_identity_security_level, b_virtualserver_modify_priority_speaker_dimm_modificator, b_virtualserver_modify_log_settings, b_virtualserver_modify_icon_id, b_virtualserver_modify_weblist, b_virtualserver_modify_min_client_version, b_virtualserver_modify_codec_encryption_mode</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupadd"><a href="#servergroupadd">servergroupadd</a></td>
+        <td>name={groupName} [type={groupDbType}]</td>
+        <td>Creates a new server group using the name specified with name and displays its ID. The optional type parameter can be used to create ServerQuery groups and template groups. For detailed information, see Definitions.</td>
+        <td>b_virtualserver_servergroup_create</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupaddclient"><a href="#servergroupaddclient">servergroupaddclient</a></td>
+        <td>sgid={groupID} cldbid={clientDBID}</td>
+        <td>Adds a client to the server group specified with sgid. Please note that a client cannot be added to default groups or template groups.</td>
+        <td>i_group_member_add_power, i_group_needed_member_add_power</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupaddperm"><a href="#servergroupaddperm">servergroupaddperm</a></td>
+        <td>sgid={groupID} [permid={permID}...]</td>
+        <td>Adds a set of specified permissions to the server group specified with sgid. Multiple permissions can be added by providing the four parameters of each permission. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupautoaddperm"><a href="#servergroupautoaddperm">servergroupautoaddperm</a></td>
+        <td>sgtype={groupID} [permid={permID}...]</td>
+        <td>Adds a set of specified permissions to *ALL* regular server groups on all virtual servers. The target groups will be identified by the value of their i_group_auto_update_type permission specified with sgtype. Multiple permissions can be added at once. A permission can be specified by permid or permsid. The known values for sgtype are: 10: Channel Guest 15: Server Guest 20: Query Guest 25: Channel Voice 30: Server Normal 35: Channel Operator 40: Channel Admin 45: Server Admin 50: Query Admin</td>
+        <td>b_permission_modify_power_ignore</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupautodelperm"><a href="#servergroupautodelperm">servergroupautodelperm</a></td>
+        <td>sgtype={groupID} [permid={permID}...]</td>
+        <td>Removes a set of specified permissions from *ALL* regular server groups on all virtual servers. The target groups will be identified by the value of their i_group_auto_update_type permission specified with sgtype. Multiple permissions can be removed at once. A permission can be specified by permid or permsid. The known values for sgtype are: 10: Channel Guest 15: Server Guest 20: Query Guest 25: Channel Voice 30: Server Normal 35: Channel Operator 40: Channel Admin 45: Server Admin 50: Query Admin</td>
+        <td>b_permission_modify_power_ignore</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupclientlist"><a href="#servergroupclientlist">servergroupclientlist</a></td>
+        <td>sgid={groupID} [-names]</td>
+        <td>Displays the IDs of all clients currently residing in the server group specified with sgid. If you're using the optional -names option, the output will also contain the last known nickname and the unique identifier of the clients.</td>
+        <td>b_virtualserver_servergroup_client_list</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupcopy"><a href="#servergroupcopy">servergroupcopy</a></td>
+        <td>ssgid={sourceGroupID} tsgid={targetGroupID}</td>
+        <td>Creates a copy of the server group specified with ssgid. If tsgid is set to 0, the server will create a new group. To overwrite an existing group, simply set tsgid to the ID of a designated target group. If a target group is set, the name parameter will be ignored. The type parameter can be used to create ServerQuery groups and template groups. For detailed information, see Definitions.</td>
+        <td>b_virtualserver_servergroup_create, i_group_modify_power, i_group_needed_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupdel"><a href="#servergroupdel">servergroupdel</a></td>
+        <td>sgid={groupID} force={1|0}</td>
+        <td>Deletes the server group specified with sgid. If force is set to 1, the server group will be deleted even if there are clients within.</td>
+        <td>b_virtualserver_servergroup_delete</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupdelclient"><a href="#servergroupdelclient">servergroupdelclient</a></td>
+        <td>sgid={groupID} cldbid={clientDBID}</td>
+        <td>Removes a client specified with cldbid from the server group specified with sgid.</td>
+        <td>i_group_member_remove_power, i_group_needed_member_remove_power</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupdelperm"><a href="#servergroupdelperm">servergroupdelperm</a></td>
+        <td>sgid={groupID} [permid={permID}...]</td>
+        <td>Removes a set of specified permissions from the server group specified with sgid. Multiple permissions can be removed at once. A permission can be specified by permid or permsid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power, i_permission_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="servergrouppermlist"><a href="#servergrouppermlist">servergrouppermlist</a></td>
+        <td>sgid={groupID} [-permsid]</td>
+        <td>Displays a list of permissions assigned to the server group specified with sgid. If the -permsid option is specified, the output will contain the permission names instead of the internal IDs.</td>
+        <td>b_virtualserver_servergroup_permission_list</td>
+      </tr>
+      
+      <tr>
+        <td id="servergrouprename"><a href="#servergrouprename">servergrouprename</a></td>
+        <td>sgid={groupID} name={groupName}</td>
+        <td>Changes the name of the server group specified with sgid.</td>
+        <td>i_group_modify_power, i_group_needed_modify_power</td>
+      </tr>
+      
+      <tr>
+        <td id="servergroupsbyclientid"><a href="#servergroupsbyclientid">servergroupsbyclientid</a></td>
+        <td>cldbid={clientDBID}</td>
+        <td>Displays all server groups the client specified with cldbid is currently residing in.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="serveridgetbyport"><a href="#serveridgetbyport">serveridgetbyport</a></td>
+        <td>virtualserver_port={serverPort}</td>
+        <td>Displays the database ID of the virtual server running on the UDP port specified by virtualserver_port.</td>
+        <td>b_serverinstance_virtualserver_list</td>
+      </tr>
+      
+      <tr>
+        <td id="serverlist"><a href="#serverlist">serverlist</a></td>
+        <td>[-uid] [-short] [-all] [-onlyoffline]</td>
+        <td>Displays a list of virtual servers including their ID, status, number of clients online, etc. If you're using the -all option, the server will list all virtual servers stored in the database. This can be useful when multiple server instances with different machine IDs are using the same database. The machine ID is used to identify the server instance a virtual server is associated with. The status of a virtual server can be either online, offline, booting up, shutting down or virtual online. While most of them are self-explanatory, virtual online is a bit more complicated. Whenever you select a virtual server which is currently stopped with the -virtual parameter, it will be started in virtual mode which means you are able to change its configuration, create channels or change permissions, but no regular TeamSpeak 3 Client can connect. As soon as the last ServerQuery client deselects the virtual server, its status will be changed back to offline.</td>
+        <td>b_serverinstance_virtualserver_list</td>
+      </tr>
+      
+      <tr>
+        <td id="serversnapshotdeploy"><a href="#serversnapshotdeploy">serversnapshotdeploy</a></td>
+        <td>[-mapping] virtualserver_snapshot</td>
+        <td>Restores the selected virtual servers configuration using the data from a previously created server snapshot. Please note that the TeamSpeak 3 Server does NOT check for necessary permissions while deploying a snapshot so the command could be abused to gain additional privileges.</td>
+        <td>b_virtualserver_snapshot_deploy</td>
+      </tr>
+      
+      <tr>
+        <td id="serverstart"><a href="#serverstart">serverstart</a></td>
+        <td>sid={serverID}</td>
+        <td>Starts the virtual server specified with sid. Depending on your permissions, you're able to start either your own virtual server only or all virtual servers in the server instance.</td>
+        <td>b_virtualserver_start_any, b_virtualserver_start</td>
+      </tr>
+      
+      <tr>
+        <td id="serverstop"><a href="#serverstop">serverstop</a></td>
+        <td>sid={serverID}</td>
+        <td>Stops the virtual server specified with sid. Depending on your permissions, you're able to stop either your own virtual server only or all virtual servers in the server instance.</td>
+        <td>b_virtualserver_stop_any, b_virtualserver_stop</td>
+      </tr>
+      
+      <tr>
+        <td id="servertemppasswordadd"><a href="#servertemppasswordadd">servertemppasswordadd</a></td>
+        <td>pw={password} desc={description}</td>
+        <td>Sets a new temporary server password specified with pw. The temporary password will be valid for the number of seconds specified with duration. The client connecting with this password will automatically join the channel specified with tcid. If tcid is set to 0, the client will join the default channel.</td>
+        <td>b_virtualserver_modify_password</td>
+      </tr>
+      
+      <tr>
+        <td id="servertemppassworddel"><a href="#servertemppassworddel">servertemppassworddel</a></td>
+        <td>pw={password}</td>
+        <td>Deletes the temporary server password specified with pw.</td>
+        <td>b_virtualserver_modify_password</td>
+      </tr>
+      
+      <tr>
+        <td id="setclientchannelgroup"><a href="#setclientchannelgroup">setclientchannelgroup</a></td>
+        <td>cgid={groupID} cid={channelID} cldbid={clientDBID}</td>
+        <td>Sets the channel group of a client to the ID specified with cgid.</td>
+        <td>i_group_member_add_power, i_group_needed_member_add_power, i_group_member_remove_power, i_group_needed_member_remove_power</td>
+      </tr>
+      
+      <tr>
+        <td id="tokenadd"><a href="#tokenadd">tokenadd</a></td>
+        <td>tokentype={1|0} tokenid1={groupID} tokenid2={channelID}</td>
+        <td>Alias for privilegekeyadd.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="tokendelete"><a href="#tokendelete">tokendelete</a></td>
+        <td>token={tokenKey}</td>
+        <td>Alias for privilegekeydelete</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="tokenuse"><a href="#tokenuse">tokenuse</a></td>
+        <td>token={tokenKey}</td>
+        <td>Alias for privilegekeyuse.</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td id="use"><a href="#use">use</a></td>
+        <td>[sid={serverID}] [port={serverPort}] [-virtual]</td>
+        <td>Selects the virtual server specified with sid or port to allow further interaction. The ServerQuery client will appear on the virtual server and acts like a real TeamSpeak 3 Client, except it's unable to send or receive voice data. If your database contains multiple virtual servers using the same UDP port, use will select a random virtual server using the specified port.</td>
+        <td>b_virtualserver_select</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</body>
+</html>
