@@ -10,7 +10,7 @@ def parse_doc(doc):
     current_section = None
     for line in doc.split('\n'):
         if line.startswith('Usage:') or line.startswith('Description:') or \
-                line.startswith('Example:') or line.startswith('Permission:'):
+                line.startswith('Example:') or line.startswith('Permissions:'):
             # section start
             line_parts = line.split(':')
             section = line_parts[0]
