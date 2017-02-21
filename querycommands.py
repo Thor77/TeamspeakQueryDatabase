@@ -53,19 +53,24 @@ def parse(query_docs):
     return commands
 
 
-def render(query_commands, output, template='query.jinja2'):
+def render(
+            query_commands, output, template='query.jinja2',
+            columns=['arguments', 'description', 'permissions']
+        ):
     template_loader = FileSystemLoader(dirname(__file__))
     template_env = Environment(loader=template_loader)
     template = template_env.get_template(template)
     with open(output, 'w') as f:
         f.write(template.render(
-            commands=sorted(query_commands.items(), key=lambda i: i[0])
+            commands=sorted(query_commands.items(), key=lambda i: i[0]),
+            columns=columns
         ))
 
 
-def main(query_docs, output, template='query.jinja2'):
+def main(query_docs, output, template='query.jinja2',
+         columns=['arguments', 'description', 'permissions']):
     commands = parse(query_docs)
-    render(commands, output, template)
+    render(commands, output, template, columns)
 
 
 if __name__ == '__main__':
@@ -82,5 +87,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '-t', '--template', help='Template', default='query.jinja2'
     )
+    parser.add_argument(
+        '-ec', '--excludecolumn', help='Exclude column from output',
+        action='append'
+    )
     args = parser.parse_args()
-    main(args.path, args.output, args.template)
+    default_columns = ['arguments', 'description', 'permissions']
+    main(args.path, args.output, args.template, [
+        column for column in default_columns
+        if column not in args.excludecolumn
+    ] if args.excludecolumn else default_columns)
