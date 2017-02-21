@@ -9,17 +9,17 @@
   <table class="pure-table">
     <thead><tr>
       <td>command</td>
-      {% if 'arguments' in columns %}<td>arguments</td>{% endif %}
-      {% if 'description' in columns %}<td>description</td>{% endif %}
-      {% if 'permissions' in columns %}<td>permissions</td>{% endif %}
+      {% for column in columns %}
+      <td>{{ column }}</td>
+      {% endfor %}
     </tr></thead>
     <tbody>
       {% for command, information in commands %}
       <tr>
         <td id="{{ command }}"><a href="#{{ command }}">{{ command }}</a></td>
-        {% if 'arguments' in columns %}<td>{{ information.arguments }}</td>{% endif %}
-        {% if 'description' in columns %}<td>{{ information.description }}</td>{% endif %}
-        {% if 'permissions' in columns %}<td>{{ information.permissions }}</td>{% endif %}
+        {% for column in columns %}
+        <td>{{ information.get(column) }}</td>
+        {% endfor %}
       </tr>
       {% endfor %}
     </tbody>
